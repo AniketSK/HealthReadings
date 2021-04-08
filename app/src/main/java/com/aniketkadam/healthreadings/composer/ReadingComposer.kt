@@ -17,12 +17,24 @@ import androidx.compose.ui.unit.dp
 import com.aniketkadam.healthreadings.readings.HealthReading
 
 @Composable
-fun ReadingComposer(submit: (HealthReading) -> Unit) {
+fun ReadingComposer(submit: (HealthReading) -> Unit, healthReading: HealthReading? = null) {
 
-    var oxygenation by rememberSaveable { mutableStateOf("") }
-    var pulse by rememberSaveable { mutableStateOf("") }
-    var temperature by rememberSaveable { mutableStateOf("") }
-    var respiratoryRate by rememberSaveable { mutableStateOf("") }
+    var oxygenation by rememberSaveable {
+        mutableStateOf(
+            healthReading?.oxygenation?.toString() ?: ""
+        )
+    }
+    var pulse by rememberSaveable { mutableStateOf(healthReading?.pulse?.toString() ?: "") }
+    var temperature by rememberSaveable {
+        mutableStateOf(
+            healthReading?.temperature?.toString() ?: ""
+        )
+    }
+    var respiratoryRate by rememberSaveable {
+        mutableStateOf(
+            healthReading?.respiratoryRate?.toString() ?: ""
+        )
+    }
 
     Box(
         Modifier.fillMaxSize(),
@@ -58,6 +70,9 @@ fun ReadingComposer(submit: (HealthReading) -> Unit) {
             Button(
                 {
                     submit(HealthReading().apply {
+                        if (healthReading != null) { // This would make it an update if it needed to be
+                            this._id = healthReading._id
+                        }
                         this.temperature = temperature.toFloatOrNull()
                         this.respiratoryRate = respiratoryRate.toIntOrNull()
                         this.pulse = pulse.toIntOrNull()
@@ -77,5 +92,5 @@ fun ReadingComposer(submit: (HealthReading) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewReadingComposer() {
-    ReadingComposer {}
+    ReadingComposer({})
 }
