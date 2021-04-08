@@ -17,7 +17,11 @@ import androidx.compose.ui.unit.dp
 import com.aniketkadam.healthreadings.readings.HealthReading
 
 @Composable
-fun ReadingComposer(submit: (HealthReading) -> Unit, healthReading: HealthReading? = null) {
+fun ReadingComposer(
+    submit: (HealthReading) -> Unit,
+    healthReading: HealthReading? = null,
+    complete: () -> Unit
+) {
 
     var oxygenation by rememberSaveable {
         mutableStateOf(
@@ -78,6 +82,7 @@ fun ReadingComposer(submit: (HealthReading) -> Unit, healthReading: HealthReadin
                         this.pulse = pulse.toIntOrNull()
                         this.oxygenation = oxygenation.toIntOrNull()
                     })
+                    complete()
                 },
                 Modifier
                     .align(Alignment.End)
@@ -92,5 +97,5 @@ fun ReadingComposer(submit: (HealthReading) -> Unit, healthReading: HealthReadin
 @Preview(showBackground = true)
 @Composable
 fun PreviewReadingComposer() {
-    ReadingComposer({})
+    ReadingComposer({}) {}
 }

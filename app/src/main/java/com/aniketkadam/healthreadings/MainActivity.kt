@@ -11,6 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import com.aniketkadam.healthreadings.composer.ComposerVm
+import com.aniketkadam.healthreadings.composer.ReadingComposer
 import com.aniketkadam.healthreadings.login.Login
 import com.aniketkadam.healthreadings.login.LoginVm
 import com.aniketkadam.healthreadings.readinglist.ReadingDisplayVm
@@ -37,7 +39,16 @@ class MainActivity : ComponentActivity() {
 
                     composable("readingList") {
                         val vm by viewModels<ReadingDisplayVm>()
-                        ReadingList(vm.readings)
+                        ReadingList(vm.readings) {
+                            navController.navigate("composeReading")
+                        }
+                    }
+
+                    composable("composeReading") {
+                        val vm by viewModels<ComposerVm>()
+                        ReadingComposer(vm::submitReading) {
+                            navController.navigate("readingList")
+                        }
                     }
                 }
             }
