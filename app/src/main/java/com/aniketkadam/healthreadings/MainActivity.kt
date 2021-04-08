@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         val vm by viewModels<LoginVm>()
                         Login(vm::login, vm.username, vm.password, vm.networkResult) {
-                            navController.navigate("home")
+                            navController.navigate("readingList")
                         }
                     }
 
