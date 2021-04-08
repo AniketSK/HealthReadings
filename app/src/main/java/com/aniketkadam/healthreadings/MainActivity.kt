@@ -41,9 +41,11 @@ class MainActivity : ComponentActivity() {
 
                     composable("readingList") {
                         val vm by viewModels<ReadingDisplayVm>()
-                        ReadingList(vm.readings) {
+                        ReadingList(vm.readings, {
                             navController.navigate("composeReading")
-                        }
+                        }, {
+                            navController.navigate("composeReading")
+                        })
                     }
 
                     composable("composeReading") {

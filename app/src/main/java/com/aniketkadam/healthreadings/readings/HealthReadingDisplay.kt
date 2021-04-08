@@ -1,5 +1,6 @@
 package com.aniketkadam.healthreadings.readings
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -17,9 +18,10 @@ import java.util.*
 fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Unit) {
     Card(
         Modifier
-            .width(84.dp)
+            .width(120.dp)
             .clickable(onClick = { onClick(reading) }, onClickLabel = "Edit", role = Role.Button)
-            .padding(4.dp)
+            .padding(4.dp),
+        border = BorderStroke(1.dp, Color.LightGray)
     ) {
         Column(Modifier.padding(4.dp)) {
             Row(
