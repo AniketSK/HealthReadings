@@ -8,8 +8,8 @@ import org.bson.types.ObjectId
 @RealmClass
 open class HealthReading : RealmModel {
     @PrimaryKey
-    var _id = ObjectId.get()
-    var temperature : Float? = null
+    var _id: ObjectId = ObjectId.get()
+    var temperature: Float? = null
     var respiratoryRate : Int? = null
     var oxygenation : Int? = null
     var pulse : Int? = null
