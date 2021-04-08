@@ -17,6 +17,7 @@ fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Uni
         Modifier
             .width(84.dp)
             .clickable(onClick = { onClick(reading) }, onClickLabel = "Edit", role = Role.Button)
+            .padding(4.dp)
     ) {
         Column(Modifier.padding(4.dp)) {
             Row(
