@@ -36,16 +36,24 @@ fun ReadingComposer(submit: (HealthReading) -> Unit) {
         ) {
 
             OutlinedTextField(value = oxygenation?.toString() ?: "",
-                onValueChange = { oxygenation = it.toInt() })
+                onValueChange = { oxygenation = it.toInt() },
+                label = { Text("Oxygenation") },
+                leadingIcon = { Text("🇴") })
 
             OutlinedTextField(value = pulse?.toString() ?: "",
-                onValueChange = { pulse = it.toInt() })
+                onValueChange = { pulse = it.toInt() },
+                label = { Text("Pulse") },
+                leadingIcon = { Text("💓") })
 
             OutlinedTextField(value = temperature?.toString() ?: "",
-                onValueChange = { temperature = it.toFloat() })
+                onValueChange = { temperature = it.toFloat() },
+                label = { Text("Temperature") },
+                leadingIcon = { Text("🌡️") })
 
             OutlinedTextField(value = respiratoryRate?.toString() ?: "",
-                onValueChange = { respiratoryRate = it.toInt() })
+                onValueChange = { respiratoryRate = it.toInt() },
+                label = { Text("Respiratory Rate") },
+                leadingIcon = { Text("😮‍💨") })
 
             Button(
                 {
