@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReadingsDao {
     fun getAllReadings(): Flow<List<HealthReading>>
+    fun submitReading(healthReading: HealthReading)
 }

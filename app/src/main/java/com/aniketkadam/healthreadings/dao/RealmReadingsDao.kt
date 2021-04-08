@@ -19,4 +19,11 @@ class RealmReadingsDao @Inject constructor(private val realmHelper: SyncedRealmH
             .findAllAsync()
             .toFlow()
             .flowOn(Dispatchers.Main)
+
+    override fun submitReading(healthReading: HealthReading) {
+        realmHelper.getRealmForPartition(realmHelper.getUserAfterLoginScreen().id)
+            .executeTransactionAsync {
+                it.copyToRealmOrUpdate(healthReading)
+            }
+    }
 }
