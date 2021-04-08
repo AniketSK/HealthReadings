@@ -19,10 +19,10 @@ import com.aniketkadam.healthreadings.readings.HealthReading
 @Composable
 fun ReadingComposer(submit: (HealthReading) -> Unit) {
 
-    var oxygenation by rememberSaveable { mutableStateOf<Int?>(null) }
-    var pulse by rememberSaveable { mutableStateOf<Int?>(null) }
-    var temperature by rememberSaveable { mutableStateOf<Float?>(null) }
-    var respiratoryRate by rememberSaveable { mutableStateOf<Int?>(null) }
+    var oxygenation by rememberSaveable { mutableStateOf("") }
+    var pulse by rememberSaveable { mutableStateOf("") }
+    var temperature by rememberSaveable { mutableStateOf("") }
+    var respiratoryRate by rememberSaveable { mutableStateOf("") }
 
     Box(
         Modifier.fillMaxSize(),
@@ -35,33 +35,33 @@ fun ReadingComposer(submit: (HealthReading) -> Unit) {
                 .padding(8.dp)
         ) {
 
-            OutlinedTextField(value = oxygenation?.toString() ?: "",
-                onValueChange = { oxygenation = it.toInt() },
+            OutlinedTextField(value = oxygenation,
+                onValueChange = { oxygenation = it },
                 label = { Text("Oxygenation") },
                 leadingIcon = { Text("🇴") })
 
-            OutlinedTextField(value = pulse?.toString() ?: "",
-                onValueChange = { pulse = it.toInt() },
+            OutlinedTextField(value = pulse,
+                onValueChange = { pulse = it },
                 label = { Text("Pulse") },
                 leadingIcon = { Text("💓") })
 
-            OutlinedTextField(value = temperature?.toString() ?: "",
-                onValueChange = { temperature = it.toFloat() },
+            OutlinedTextField(value = temperature,
+                onValueChange = { temperature = it },
                 label = { Text("Temperature") },
                 leadingIcon = { Text("🌡️") })
 
-            OutlinedTextField(value = respiratoryRate?.toString() ?: "",
-                onValueChange = { respiratoryRate = it.toInt() },
+            OutlinedTextField(value = respiratoryRate,
+                onValueChange = { respiratoryRate = it },
                 label = { Text("Respiratory Rate") },
                 leadingIcon = { Text("😮‍💨") })
 
             Button(
                 {
                     submit(HealthReading().apply {
-                        this.temperature = temperature
-                        this.respiratoryRate = respiratoryRate
-                        this.pulse = pulse
-                        this.oxygenation = oxygenation
+                        this.temperature = temperature.toFloatOrNull()
+                        this.respiratoryRate = respiratoryRate.toIntOrNull()
+                        this.pulse = pulse.toIntOrNull()
+                        this.oxygenation = oxygenation.toIntOrNull()
                     })
                 },
                 Modifier
