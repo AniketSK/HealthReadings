@@ -9,7 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import com.aniketkadam.healthreadings.login.Login
+import com.aniketkadam.healthreadings.login.LoginVm
 import com.aniketkadam.healthreadings.readinglist.ReadingDisplayVm
 import com.aniketkadam.healthreadings.readinglist.ReadingList
 import com.aniketkadam.healthreadings.ui.theme.HealthReadingsTheme
@@ -24,6 +27,14 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 NavHost(navController, startDestination = "login") {
+
+                    composable("login") {
+                        val vm by viewModels<LoginVm>()
+                        Login(vm::login, vm.username, vm.password, vm.networkResult) {
+                            navController.navigate("home")
+                        }
+                    }
+
                     composable("readingList") {
                         val vm by viewModels<ReadingDisplayVm>()
                         ReadingList(vm.readings)
