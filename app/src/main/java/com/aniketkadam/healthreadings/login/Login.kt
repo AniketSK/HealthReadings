@@ -1,5 +1,6 @@
 package com.aniketkadam.healthreadings.login
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -83,6 +84,7 @@ fun Login(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun LoginPreview() {
