@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Unit) {
@@ -26,7 +28,10 @@ fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Uni
                     .fillMaxWidth()
                     .padding(bottom = 4.dp)
             ) {
-                Text("3:30pm", color = Color.DarkGray)
+                Text(
+                    SimpleDateFormat("hh:mm", Locale.getDefault()).format(reading.date),
+                    color = Color.DarkGray
+                )
             }
             Row {
                 Column(Modifier.padding(end = 4.dp)) {
