@@ -44,6 +44,11 @@ android {
         kotlinCompilerExtensionVersion compose_version
         kotlinCompilerVersion '1.4.31'
     }
+
+    realm {
+        syncEnabled = true
+    }
+
 }
 
 dependencies {
