@@ -1,7 +1,7 @@
 package com.aniketkadam.healthreadings.readinglist
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -11,11 +11,11 @@ import com.aniketkadam.healthreadings.readings.HealthReadingDisplay
 import kotlin.random.Random
 
 @Composable
-fun ReadingList(readings: List<HealthReading>) {
+fun ReadingList(readings: List<HealthReading>, onItemClicked: (HealthReading) -> Unit) {
 
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         items(readings) {
-            HealthReadingDisplay(it)
+            HealthReadingDisplay(it, onItemClicked)
         }
     }
 }
@@ -32,5 +32,5 @@ fun PreviewReadingsList() {
         }
     }
 
-    ReadingList(demoList)
+    ReadingList(demoList) {}
 }
