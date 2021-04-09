@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.*
 
+
 @Composable
 fun ReadingComposer(
     submit: (HealthReading) -> Unit,
@@ -34,23 +35,23 @@ fun ReadingComposer(
             var oxygenation by rememberSaveable(healthReading) {
                 mutableStateOf(healthReading.oxygenation?.toString() ?: "")
             }
-            var pulse by rememberSaveable {
+            var pulse by rememberSaveable(healthReading) {
                 mutableStateOf(
                     healthReading.pulse?.toString() ?: ""
                 )
             }
-            var temperature by rememberSaveable {
+            var temperature by rememberSaveable(healthReading) {
                 mutableStateOf(
                     healthReading.temperature?.toString() ?: ""
                 )
             }
-            var respiratoryRate by rememberSaveable {
+            var respiratoryRate by rememberSaveable(healthReading) {
                 mutableStateOf(
                     healthReading.respiratoryRate?.toString() ?: ""
                 )
             }
 
-            var savedDate by rememberSaveable {
+            var savedDate by rememberSaveable(healthReading) {
                 mutableStateOf(healthReading.date)
             }
 
@@ -113,7 +114,7 @@ fun ReadingComposer(
                             SimpleDateFormat(
                                 "hh:mm E dd/MMM/yy",
                                 Locale.getDefault()
-                            ).format(savedDate)
+                            ).format(Date())
                         }",
                         Modifier
                             .clickable {
