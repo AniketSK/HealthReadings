@@ -4,12 +4,14 @@ package com.aniketkadam.healthreadings.composer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.aniketkadam.healthreadings.readings.HealthReading
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -75,6 +77,7 @@ fun ReadingComposer(
                         onValueChange = { oxygenation = it },
                         label = { Text("Oxygenation") },
                         leadingIcon = { Text("🇴") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                     )
 
@@ -83,6 +86,7 @@ fun ReadingComposer(
                         onValueChange = { pulse = it },
                         label = { Text("Pulse") },
                         leadingIcon = { Text("💓") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                     )
 
@@ -91,6 +95,7 @@ fun ReadingComposer(
                         onValueChange = { temperature = it },
                         label = { Text("Temperature") },
                         leadingIcon = { Text("🌡️") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                     )
 
@@ -99,6 +104,7 @@ fun ReadingComposer(
                         onValueChange = { respiratoryRate = it },
                         label = { Text("Respiratory Rate") },
                         leadingIcon = { Text("😮‍💨") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                     )
 
