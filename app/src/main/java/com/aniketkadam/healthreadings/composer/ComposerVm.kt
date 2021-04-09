@@ -21,6 +21,12 @@ class ComposerVm @Inject constructor(private val dao: ReadingsDao) : ViewModel()
         }
     }
 
+    // Only supposed to be called when there's a new reading to be created.
+    // TODO replace this with a proper taking of the nav args into the viewmodel to make this call itself.
+    fun noHealthReadingHack() {
+        currentHealthReading.value = HealthReading()
+    }
+
     fun submitReading(healthReading: HealthReading) {
         dao.submitReading(healthReading)
         currentHealthReading.value = null

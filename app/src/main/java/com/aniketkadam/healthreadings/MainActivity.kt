@@ -54,8 +54,11 @@ class MainActivity : ComponentActivity() {
                         })
                     ) { backStackEntry ->
                         val vm by viewModels<ComposerVm>()
-                        backStackEntry.arguments?.getString("existingEntryId")?.let {
-                            vm.setCurrentHealthReadingId(it)
+
+                        when (val entryId =
+                            backStackEntry.arguments?.getString("existingEntryId")) {
+                            null -> vm.noHealthReadingHack()
+                            else -> vm.setCurrentHealthReadingId(entryId)
                         }
 
                         ReadingComposer(
