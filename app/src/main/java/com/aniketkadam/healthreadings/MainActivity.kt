@@ -16,7 +16,6 @@ import com.aniketkadam.healthreadings.login.Login
 import com.aniketkadam.healthreadings.login.LoginVm
 import com.aniketkadam.healthreadings.readinglist.ReadingDisplayVm
 import com.aniketkadam.healthreadings.readinglist.ReadingList
-import com.aniketkadam.healthreadings.readings.HealthReading
 import com.aniketkadam.healthreadings.ui.theme.HealthReadingsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,23 +39,28 @@ class MainActivity : ComponentActivity() {
 
                     composable("readingList") {
                         val vm by viewModels<ReadingDisplayVm>()
-                        ReadingList(vm.readings, {
-                            navController.navigate("composeReading")
+                        ReadingList(vm.readings, { readingToEdit ->
+                            navController.navigate("composeReading?existingEntryId=${readingToEdit._id.toHexString()}")
                         }, {
                             navController.navigate("composeReading")
                         })
                     }
 
                     composable(
-                        "composeReading/{editEntryId}",
-                        arguments = listOf(navArgument("existingEntry") {
+                        "composeReading?existingEntryId={existingEntryId}",
+                        arguments = listOf(navArgument("existingEntryId") {
+                            nullable = true
                             type = NavType.StringType
                         })
                     ) { backStackEntry ->
                         val vm by viewModels<ComposerVm>()
+                        backStackEntry.arguments?.getString("existingEntryId")?.let {
+                            vm.setCurrentHealthReadingId(it)
+                        }
+
                         ReadingComposer(
                             vm::submitReading,
-                            backStackEntry.arguments?.getSerializable("existingEntry") as HealthReading
+                            vm.currentHealthReading
                         ) { // TODO find better ways to deserialize
                             navController.navigate("readingList")
                         }

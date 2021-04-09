@@ -2,11 +2,16 @@ package com.aniketkadam.healthreadings.dao
 
 import com.aniketkadam.healthreadings.readings.HealthReading
 import com.aniketkadam.healthreadings.realminit.SyncedRealmHelper
+import io.realm.Realm
 import io.realm.Sort
+import io.realm.kotlin.freeze
 import io.realm.kotlin.toFlow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
+import org.bson.types.ObjectId
 import javax.inject.Inject
 
 class RealmReadingsDao @Inject constructor(private val realmHelper: SyncedRealmHelper) :
@@ -28,4 +33,14 @@ class RealmReadingsDao @Inject constructor(private val realmHelper: SyncedRealmH
                 })
             }
     }
+
+    override suspend fun getReading(id: String): HealthReading? =
+        withContext(Realm.WRITE_EXECUTOR.asCoroutineDispatcher()) {
+            realmHelper.getRealmForPartition(realmHelper.getUserAfterLoginScreen().id)
+                .where(HealthReading::class.java)
+                .equalTo(HealthReading::_id.name, ObjectId(id))
+                .findFirst()
+                ?.freeze()
+        }
+
 }
