@@ -8,16 +8,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
 import com.aniketkadam.healthreadings.composer.ComposerVm
 import com.aniketkadam.healthreadings.composer.ReadingComposer
 import com.aniketkadam.healthreadings.login.Login
 import com.aniketkadam.healthreadings.login.LoginVm
 import com.aniketkadam.healthreadings.readinglist.ReadingDisplayVm
 import com.aniketkadam.healthreadings.readinglist.ReadingList
+import com.aniketkadam.healthreadings.readings.HealthReading
 import com.aniketkadam.healthreadings.ui.theme.HealthReadingsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,9 +47,17 @@ class MainActivity : ComponentActivity() {
                         })
                     }
 
-                    composable("composeReading") {
+                    composable(
+                        "composeReading/{editEntryId}",
+                        arguments = listOf(navArgument("existingEntry") {
+                            type = NavType.StringType
+                        })
+                    ) { backStackEntry ->
                         val vm by viewModels<ComposerVm>()
-                        ReadingComposer(vm::submitReading) {
+                        ReadingComposer(
+                            vm::submitReading,
+                            backStackEntry.arguments?.getSerializable("existingEntry") as HealthReading
+                        ) { // TODO find better ways to deserialize
                             navController.navigate("readingList")
                         }
                     }
