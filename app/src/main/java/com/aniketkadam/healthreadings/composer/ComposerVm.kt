@@ -12,17 +12,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ComposerVm @Inject constructor(private val dao: ReadingsDao) : ViewModel() {
 
-    var currentHealthReading = mutableStateOf(HealthReading())
+    var currentHealthReading = mutableStateOf<HealthReading?>(null)
+        private set
 
     fun setCurrentHealthReadingId(id: String) {
         viewModelScope.launch {
-            val existingReading = dao.getReading(id)
-            if (existingReading != null) {
-                currentHealthReading.value = existingReading
-            }
+            currentHealthReading.value = dao.getReading(id) ?: HealthReading()
         }
     }
 
-    fun submitReading() = dao.submitReading(currentHealthReading.value)
+    fun submitReading(healthReading: HealthReading) {
+        dao.submitReading(healthReading)
+        currentHealthReading.value = null
+    }
 
 }

@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                         ReadingComposer(
                             vm::submitReading,
                             vm.currentHealthReading
-                        ) { // TODO find better ways to deserialize
+                        ) {
                             navController.navigate("readingList")
                         }
                     }

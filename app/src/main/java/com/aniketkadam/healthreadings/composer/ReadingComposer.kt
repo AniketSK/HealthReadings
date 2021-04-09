@@ -4,13 +4,9 @@ package com.aniketkadam.healthreadings.composer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,81 +20,122 @@ import java.util.*
 
 @Composable
 fun ReadingComposer(
-    submit: () -> Unit,
-    healthReading: MutableState<HealthReading>,
+    submit: (HealthReading) -> Unit,
+    initialHealthReading: MutableState<HealthReading?>,
     complete: () -> Unit
 ) {
 
-    val dialog = remember { MaterialDialog() }
-    dialog.build {
-        datetimepicker {
-            healthReading.value.date = Date.from(it.atZone(ZoneId.systemDefault()).toInstant())
-        }
-    }
+    when (val healthReading = initialHealthReading.value) {
+        null -> CircularProgressIndicator()
+        else -> {
 
-    Box(
-        Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+            var oxygenation by rememberSaveable(healthReading) {
+                mutableStateOf(healthReading.oxygenation?.toString() ?: "")
+            }
+            var pulse by rememberSaveable {
+                mutableStateOf(
+                    healthReading.pulse?.toString() ?: ""
+                )
+            }
+            var temperature by rememberSaveable {
+                mutableStateOf(
+                    healthReading.temperature?.toString() ?: ""
+                )
+            }
+            var respiratoryRate by rememberSaveable {
+                mutableStateOf(
+                    healthReading.respiratoryRate?.toString() ?: ""
+                )
+            }
 
-        Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(8.dp)
-        ) {
+            var savedDate by rememberSaveable {
+                mutableStateOf(healthReading.date)
+            }
 
-            OutlinedTextField(
-                value = healthReading.value.oxygenation.toString(),
-                onValueChange = { healthReading.value.oxygenation = it.toIntOrNull() },
-                label = { Text("Oxygenation") },
-                leadingIcon = { Text("🇴") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
-            )
+            val dialog = remember { MaterialDialog() }
+            dialog.build {
+                datetimepicker {
+                    savedDate = Date.from(it.atZone(ZoneId.systemDefault()).toInstant())
+                }
+            }
 
-            OutlinedTextField(
-                value = healthReading.value.pulse.toString(),
-                onValueChange = { healthReading.value.pulse = it.toIntOrNull() },
-                label = { Text("Pulse") },
-                leadingIcon = { Text("💓") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
-            )
-
-            OutlinedTextField(
-                value = healthReading.value.temperature.toString(),
-                onValueChange = { healthReading.value.temperature = it.toFloatOrNull() },
-                label = { Text("Temperature") },
-                leadingIcon = { Text("🌡️") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
-            )
-
-            OutlinedTextField(
-                value = healthReading.value.respiratoryRate.toString(),
-                onValueChange = { healthReading.value.respiratoryRate = it.toIntOrNull() },
-                label = { Text("Respiratory Rate") },
-                leadingIcon = { Text("😮‍💨") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
-            )
-
-            Text(
-                "At ${
-                    SimpleDateFormat(
-                        "hh:mm E dd/MMM/yy",
-                        Locale.getDefault()
-                    ).format(healthReading.value.date)
-                }", Modifier.clickable {
-                    dialog.show()
-                })
-
-            Button(
-                {
-                    submit()
-                    complete()
-                },
-                Modifier
-                    .align(Alignment.End)
-                    .padding(top = 8.dp)
+            Box(
+                Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Done")
+
+                Column(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(8.dp)
+                ) {
+
+                    OutlinedTextField(
+                        value = oxygenation,
+                        onValueChange = { oxygenation = it },
+                        label = { Text("Oxygenation") },
+                        leadingIcon = { Text("🇴") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
+                    )
+
+                    OutlinedTextField(
+                        value = pulse,
+                        onValueChange = { pulse = it },
+                        label = { Text("Pulse") },
+                        leadingIcon = { Text("💓") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
+                    )
+
+                    OutlinedTextField(
+                        value = temperature,
+                        onValueChange = { temperature = it },
+                        label = { Text("Temperature") },
+                        leadingIcon = { Text("🌡️") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
+                    )
+
+                    OutlinedTextField(
+                        value = respiratoryRate,
+                        onValueChange = { respiratoryRate = it },
+                        label = { Text("Respiratory Rate") },
+                        leadingIcon = { Text("😮‍💨") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
+                    )
+
+                    Text(
+                        "At ${
+                            SimpleDateFormat(
+                                "hh:mm E dd/MMM/yy",
+                                Locale.getDefault()
+                            ).format(savedDate)
+                        }",
+                        Modifier
+                            .clickable {
+                                dialog.show()
+                            }
+                            .padding(4.dp),
+                        color = if (isSystemInDarkTheme()) Color.White else Color.Black
+                    )
+
+                    Button(
+                        {
+                            submit(HealthReading().apply {
+                                _id = healthReading._id
+                                this.oxygenation = oxygenation.toIntOrNull()
+                                this.temperature = temperature.toFloatOrNull()
+                                this.pulse = pulse.toIntOrNull()
+                                this.respiratoryRate = respiratoryRate.toIntOrNull()
+                                this.date = savedDate
+                            })
+                            complete()
+                        },
+                        Modifier
+                            .align(Alignment.End)
+                            .padding(top = 8.dp)
+                    ) {
+                        Text("Done")
+                    }
+                }
             }
         }
     }
