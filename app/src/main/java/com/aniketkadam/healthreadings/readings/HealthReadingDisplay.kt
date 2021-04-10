@@ -11,15 +11,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
-fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Unit) {
+fun HealthReadingDisplay(reading: HealthReadingDisplayData, onClick: (HealthReading) -> Unit) {
     Card(
         Modifier
             .width(120.dp)
-            .clickable(onClick = { onClick(reading) }, onClickLabel = "Edit", role = Role.Button)
+            .clickable(
+                onClick = { onClick(reading.healthReading) },
+                onClickLabel = "Edit",
+                role = Role.Button
+            )
             .padding(4.dp),
         border = BorderStroke(1.dp, Color.LightGray)
     ) {
@@ -31,7 +33,7 @@ fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Uni
                     .padding(bottom = 4.dp)
             ) {
                 Text(
-                    SimpleDateFormat("hh:mm", Locale.getDefault()).format(reading.date),
+                    reading.displayDate,
                     color = Color.DarkGray
                 )
             }
@@ -43,10 +45,10 @@ fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Uni
                     Text("😮‍💨")
                 }
                 Column {
-                    Text("${reading.oxygenation ?: " - "}")
-                    Text("${reading.pulse ?: " - "}")
-                    Text("${reading.temperature ?: " - "}")
-                    Text("${reading.respiratoryRate ?: " - "}")
+                    Text(reading.oxygenation)
+                    Text(reading.pulse)
+                    Text(reading.temperature)
+                    Text(reading.respiratoryRate)
                 }
             }
         }
@@ -56,19 +58,19 @@ fun HealthReadingDisplay(reading: HealthReading, onClick: (HealthReading) -> Uni
 @Preview
 @Composable
 fun PreviewHealthReadingWithAllValues() {
-    HealthReadingDisplay(reading = HealthReading().apply {
+    HealthReadingDisplay(reading = HealthReadingDisplayData(HealthReading().apply {
         oxygenation = 99
         pulse = 80
         temperature = 97.5f
         respiratoryRate = 18
-    }) {}
+    }, "")) {}
 }
 
 @Preview
 @Composable
 fun PreviewHealthReadingWithSomeValuesMissing() {
-    HealthReadingDisplay(reading = HealthReading().apply {
+    HealthReadingDisplay(reading = HealthReadingDisplayData(HealthReading().apply {
         oxygenation = 99
         pulse = 80
-    }) {}
+    }, "")) {}
 }

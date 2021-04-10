@@ -16,12 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aniketkadam.healthreadings.readings.HealthReading
 import com.aniketkadam.healthreadings.readings.HealthReadingDisplay
+import com.aniketkadam.healthreadings.readings.HealthReadingDisplayData
 import kotlin.random.Random
 
 @ExperimentalFoundationApi
 @Composable
 fun ReadingList(
-    readings: List<HealthReading>,
+    readings: List<HealthReadingDisplayData>,
     onItemClicked: (HealthReading) -> Unit,
     addNewEntry: () -> Unit
 ) {
@@ -53,13 +54,13 @@ fun ReadingList(
 @Composable
 fun PreviewReadingsList() {
     val demoList = List(6) {
-        HealthReading().apply {
+        HealthReadingDisplayData(HealthReading().apply {
             oxygenation = Random.nextInt(90, 99)
             pulse = Random.nextInt(80, 120)
             temperature =
                 if (it % 2 == 0) null else "%.2f".format(Random.nextFloat() * 7.0f + 90).toFloat()
             respiratoryRate = if (it % 3 == 0) null else Random.nextInt(12, 20)
-        }
+        }, "")
     }
 
     ReadingList(demoList, {}) {}
