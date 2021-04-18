@@ -1,30 +1,29 @@
 package com.aniketkadam.healthreadings.composer
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aniketkadam.healthreadings.dao.ReadingsDao
 import com.aniketkadam.healthreadings.readings.HealthReading
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ComposerVm @Inject constructor(private val dao: ReadingsDao) : ViewModel() {
+class ComposerVm(private val dao: ReadingsDao, existingReading: String?) :
+    ViewModel() {
 
     var currentHealthReading = mutableStateOf<HealthReading?>(null)
         private set
 
-    fun setCurrentHealthReadingId(id: String) {
+    init {
+        Log.d("Creating", "Initing")
         viewModelScope.launch {
-            currentHealthReading.value = dao.getReading(id) ?: HealthReading()
-        }
-    }
 
-    // Only supposed to be called when there's a new reading to be created.
-    // TODO replace this with a proper taking of the nav args into the viewmodel to make this call itself.
-    fun noHealthReadingHack() {
-        currentHealthReading.value = HealthReading()
+            // Get either the reading that exists or create a new one.
+            //  Existing Id or the reading for it may be null
+            currentHealthReading.value =
+                existingReading?.let { dao.getReading(it) } ?: HealthReading()
+
+        }
     }
 
     fun submitReading(healthReading: HealthReading) {
@@ -32,4 +31,8 @@ class ComposerVm @Inject constructor(private val dao: ReadingsDao) : ViewModel()
         currentHealthReading.value = null
     }
 
+    override fun onCleared() {
+        Log.d("Creating", "Cleared")
+        super.onCleared()
+    }
 }

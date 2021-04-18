@@ -8,6 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import com.aniketkadam.healthreadings.composer.ComposerVm
@@ -18,9 +19,13 @@ import com.aniketkadam.healthreadings.readinglist.ReadingDisplayVm
 import com.aniketkadam.healthreadings.readinglist.ReadingList
 import com.aniketkadam.healthreadings.ui.theme.HealthReadingsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var serviceFactory: AssistedComposerVmFactory
+
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("readingList") {
                         val vm by viewModels<ReadingDisplayVm>()
+
                         ReadingList(vm.readings, { readingToEdit ->
                             navController.navigate("composeReading?existingEntryId=${readingToEdit._id.toHexString()}")
                         }, {
@@ -53,13 +59,8 @@ class MainActivity : ComponentActivity() {
                             type = NavType.StringType
                         })
                     ) { backStackEntry ->
-                        val vm by viewModels<ComposerVm>()
-
-                        when (val entryId =
-                            backStackEntry.arguments?.getString("existingEntryId")) {
-                            null -> vm.noHealthReadingHack()
-                            else -> vm.setCurrentHealthReadingId(entryId)
-                        }
+                        val key = backStackEntry.arguments?.getString("existingEntryId")
+                        val vm = viewModel<ComposerVm>(key, serviceFactory.create(key))
 
                         ReadingComposer(
                             vm::submitReading,
