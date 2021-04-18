@@ -1,6 +1,7 @@
 package com.aniketkadam.healthreadings.composer
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -12,8 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aniketkadam.healthreadings.readings.HealthReading
+import com.aniketkadam.healthreadings.timer.TimerDisplay
+import com.aniketkadam.healthreadings.timer.TimerVm
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.datetimepicker
 import java.text.SimpleDateFormat
@@ -106,7 +111,12 @@ fun ReadingComposer(
                         label = { Text("Respiratory Rate") },
                         leadingIcon = { Text("😮‍💨") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = if (isSystemInDarkTheme()) Color.White else Color.Black),
+                        trailingIcon = {
+                            val vm = viewModel<TimerVm>()
+                            val timerState = vm.timerStateFlow.collectAsState()
+                            TimerDisplay(timerState.value, true, vm::toggleStart)
+                        }
                     )
 
                     Text(
@@ -148,8 +158,9 @@ fun ReadingComposer(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewReadingComposer() {
-//    ReadingComposer({}) {}
-//}
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+fun PreviewReadingComposer() {
+    ReadingComposer(submit = { }, initialHealthReading = mutableStateOf(HealthReading())) {}
+}
