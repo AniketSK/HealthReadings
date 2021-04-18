@@ -10,7 +10,12 @@ data class HealthReadingDisplayData(
 ) : BaseDisplayClass() {
 
     val displayDate: String =
-        SimpleDateFormat("hh:mm\ndd MMM", Locale.getDefault()).format(healthReading.date)
+        SimpleDateFormat("hh:mm dd MMM", Locale.getDefault()).format(healthReading.date)
+    val displayDateTime: String =
+        SimpleDateFormat("hh:mm", Locale.getDefault()).format(healthReading.date)
+    val displayDateDayMonth: String =
+        SimpleDateFormat("dd MMM", Locale.getDefault()).format(healthReading.date)
+
     val date = healthReading.date
     val temperature: String = numberFormatter(healthReading.temperature)
     val respiratoryRate: String = numberFormatter(healthReading.respiratoryRate)
